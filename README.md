@@ -102,6 +102,6 @@ dotnet test
 
 ### Bonus Features
  - **Marking to-do items as completed.**
-- ** Filtering to-do items by completion status and sorting by due date.**
-- ** Basic authentication for secured endpoints.**
-- ** Input validation for required fields like Title.**
+- **Filtering to-do items by completion status and sorting by due date.**
+- **Basic authentication for secured endpoints.**
+- **Input validation for required fields like Title.**
