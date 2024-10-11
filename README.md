@@ -64,9 +64,8 @@ The to-do items are stored in-memory for simplicity. This means that the data is
 git clone https://github.com/rajprashantsharma/ToDo_API
 cd ToDo_API
 
-
-### Install Dependencies:
-## Ensure that you have .NET 8 SDK installed. Restore dependencies by running:
+### Install Dependencies
+Ensure that you have .NET 8 SDK installed. Restore dependencies by running:
 
 ```bash
 dotnet restore
