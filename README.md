@@ -61,6 +61,6 @@ The to-do items are stored in-memory for simplicity. This means that the data is
 ### Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone [<repository-url>](https://github.com/rajprashantsharma/ToDo_API)
 cd ToDo_API
 
