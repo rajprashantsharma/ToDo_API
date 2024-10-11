@@ -89,7 +89,18 @@ Unit tests are written using xUnit and Moq. The tests cover the core functionali
 dotnet test
 ```
 ### Key Unit Tests:
-**Authentication**: Verifies that Basic Authentication works correctly.
-**CRUD Operations**: Verifies the creation, retrieval, updating, and deletion of to-do items.
-**Filtering and Sorting**: Ensures that filtering by completion status and sorting by due date works as expected.
-**Error Handling**: Verifies that appropriate error messages and status codes are returned for invalid requests.
+- **Authentication**: Verifies that Basic Authentication works correctly.
+- **CRUD Operations**: Verifies the creation, retrieval, updating, and deletion of to-do items.
+- **Filtering and Sorting**: Ensures that filtering by completion status and sorting by due date works as expected.
+- **Error Handling**: Verifies that appropriate error messages and status codes are returned for invalid requests.
+
+### Requirements
+- **.NET 8 SDK**
+- **xUnit for unit testing**
+ - **Moq for mocking dependencies**
+
+### Bonus Features
+ - **Marking to-do items as completed.
+- ** Filtering to-do items by completion status and sorting by due date.
+- ** Basic authentication for secured endpoints.
+- ** Input validation for required fields like Title.
