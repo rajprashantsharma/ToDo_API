@@ -96,11 +96,12 @@ dotnet test
 
 ### Requirements
 - **.NET 8 SDK**
+-  **IMediator**
 - **xUnit for unit testing**
  - **Moq for mocking dependencies**
 
 ### Bonus Features
- - **Marking to-do items as completed.
-- ** Filtering to-do items by completion status and sorting by due date.
-- ** Basic authentication for secured endpoints.
-- ** Input validation for required fields like Title.
+ - **Marking to-do items as completed.**
+- ** Filtering to-do items by completion status and sorting by due date.**
+- ** Basic authentication for secured endpoints.**
+- ** Input validation for required fields like Title.**
