@@ -66,7 +66,7 @@ cd ToDo_API
 
 ###  Install Dependencies
 Ensure that you have .NET 8 SDK installed. Restore dependencies by running:
-```bash
+
 dotnet restore
 
 ### Build the Project
