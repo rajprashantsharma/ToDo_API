@@ -41,13 +41,70 @@ The API uses **Basic Authentication** to secure its endpoints. You need to provi
 - **Username**: `admin`
 - **Password**: `password`
 
-### Example Authorization Header
+# API Endpoints
 
+| Method | Endpoint                   | Description                          | Auth Required |
+|--------|-----------------------------|--------------------------------------|---------------|
+| POST   | /todos                      | Create a new to-do item              | Yes           |
+| GET    | /todos                      | Get all to-do items                  | No            |
+| GET    | /todos/{id}                 | Get a specific to-do item by ID      | Yes           |
+| PUT    | /todos/{id}                 | Update a specific to-do item by ID   | Yes           |
+| DELETE | /todos/{id}                 | Delete a specific to-do item by ID   | Yes           |
+| PATCH  | /todos/{id}/complete        | Mark a to-do item as complete        | Yes           |
+| GET    | /todos/filtered             | Get filtered and sorted to-do items  | Yes           |
+
+# Data Storage
+The to-do items are stored in-memory for simplicity. This means that the data is lost when the application is restarted. The storage mechanism can be easily extended to persist data to a file or a database in the future.
+
+## Running the Project
+
+### Clone the Repository
+
+```bash
+git clone <repository-url>
+cd ToDo_API
+
+###  Install Dependencies
+Ensure that you have .NET 8 SDK installed. Restore dependencies by running:
+```bash
+dotnet restore
+
+### Build the Project
+```bash
+dotnet build
+
+### Run the Application
+```bash
+dotnet run
+
+### Swagger Documentation
+When the application is running, navigate to:
 ```plaintext
-Authorization: Basic YWRtaW46cGFzc3dvcmQ=
+http://localhost:<port>/swagger
 
+### Unit Testing
+Unit tests are written using xUnit and Moq. The tests cover the core functionality of the API and ensure that authentication, creation, updating, and deletion of to-do items work as expected.
 
+To run the tests, execute:
+```bash
+dotnet test
 
+### Key Unit Tests:
+**Authentication**: Verifies that Basic Authentication works correctly.
+**CRUD Operations**: Verifies the creation, retrieval, updating, and deletion of to-do items.
+**Filtering and Sorting**: Ensures that filtering by completion status and sorting by due date works as expected.
+**Error Handling**: Verifies that appropriate error messages and status codes are returned for invalid requests.
+
+## Requirements
+**.NET 8 SDK**
+**xUnit for unit testing**
+**Moq for mocking dependencies**
+
+## Bonus Features
+Marking to-do items as completed.
+Filtering to-do items by completion status and sorting by due date.
+Basic authentication for secured endpoints.
+Input validation for required fields like Title.
 
 
 ### How to use the `README.md` file:
