@@ -63,5 +63,33 @@ The to-do items are stored in-memory for simplicity. This means that the data is
 ```bash
 git clone https://github.com/rajprashantsharma/ToDo_API
 cd ToDo_API
+```
+### Install Dependencies
+Ensure that you have .NET 8 SDK installed. Restore dependencies by running:
+```bash
+dotnet restore
+```
+### Build the Project
+```bash
+dotnet build
+```
+### Run the Application
+```bash
+dotnet run
+```
 
+### Swagger Documentation
+When the application is running, navigate to http://localhost:<port>/swagger in your browser to explore the API using Swagger UI.
 
+### Unit Testing
+Unit tests are written using xUnit and Moq. The tests cover the core functionality of the API and ensure that authentication, creation, updating, and deletion of to-do items work as expected.
+
+## To run the tests, execute:
+```bash
+dotnet test
+```
+### Key Unit Tests:
+**Authentication**: Verifies that Basic Authentication works correctly.
+**CRUD Operations**: Verifies the creation, retrieval, updating, and deletion of to-do items.
+**Filtering and Sorting**: Ensures that filtering by completion status and sorting by due date works as expected.
+**Error Handling**: Verifies that appropriate error messages and status codes are returned for invalid requests.
