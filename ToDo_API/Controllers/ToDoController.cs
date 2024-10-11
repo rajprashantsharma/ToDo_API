@@ -11,7 +11,7 @@ namespace ToDo_API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]  // All endpoints are protected by default 
+    [Authorize]  // By default All endpoints are protected 
     public class ToDoController : ControllerBase
     {
         private readonly IMediator _mediator;
