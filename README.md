@@ -64,52 +64,6 @@ The to-do items are stored in-memory for simplicity. This means that the data is
 git clone <repository-url>
 cd ToDo_API
 
-###  Install Dependencies
+Install Dependencies
 Ensure that you have .NET 8 SDK installed. Restore dependencies by running:
-
 dotnet restore
-
-### Build the Project
-```bash
-dotnet build
-
-### Run the Application
-```bash
-dotnet run
-
-### Swagger Documentation
-When the application is running, navigate to:
-```plaintext
-http://localhost:<port>/swagger
-
-### Unit Testing
-Unit tests are written using xUnit and Moq. The tests cover the core functionality of the API and ensure that authentication, creation, updating, and deletion of to-do items work as expected.
-
-To run the tests, execute:
-```bash
-dotnet test
-
-### Key Unit Tests:
-**Authentication**: Verifies that Basic Authentication works correctly.
-**CRUD Operations**: Verifies the creation, retrieval, updating, and deletion of to-do items.
-**Filtering and Sorting**: Ensures that filtering by completion status and sorting by due date works as expected.
-**Error Handling**: Verifies that appropriate error messages and status codes are returned for invalid requests.
-
-## Requirements
-**.NET 8 SDK**
-**xUnit for unit testing**
-**Moq for mocking dependencies**
-
-## Bonus Features
-Marking to-do items as completed.
-Filtering to-do items by completion status and sorting by due date.
-Basic authentication for secured endpoints.
-Input validation for required fields like Title.
-
-
-### How to use the `README.md` file:
-1. **Clone the repository** and place this `README.md` file in the root folder of your project.
-2. **Make sure to replace `<repository-url>`** with your actual repository URL when sharing with others.
-3. This file includes detailed instructions about running the project, authentication, testing, and planned future improvements.
-
-Let me know if you need any further customization!
