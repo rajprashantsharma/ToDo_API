@@ -30,7 +30,7 @@ namespace ToDo_API.Tests
         /// </summary>
         /// <returns></returns>
         [Fact]
-        public async Task GetAll_Item_With_StatusCode200_returnOk()
+        public async Task GetAll_Item_With_StatusCode200()
         {
             var Todo = new List<ToDoItem>
             { new ToDoItem { Id = Guid.NewGuid(), Title = "Code Test 1", Completed = true, },
@@ -38,37 +38,35 @@ namespace ToDo_API.Tests
             }
                  };
 
-            var response = Response<IEnumerable<ToDoItem>>.CreateSuccess(Todo, "Items retrieved successfully");
+            var response = Response<List<ToDoItem>>.CreateSuccess(Todo, "To Do items retrieved successfully");
 
             _Mock.Setup(m => m.Send(It.IsAny<GetAllToDosQuery>(), It.IsAny<CancellationToken>()))
                          .ReturnsAsync(response);
-            // Act
+           
             var finalresult = await _controller.GetAll();
-
-            // Assert
             var okResult = Assert.IsType<OkObjectResult>(finalresult);
             var returnValue = Assert.IsAssignableFrom<Response<List<ToDoItem>>>(okResult.Value);
 
             Assert.Equal(2, returnValue.Data.Count);
-            Assert.Equal("Test1", returnValue.Data[0].Title);
+            Assert.Equal("Code Test 1", returnValue.Data[0].Title);
         }
         [Fact]
-        public async Task GetAll_ReturnsNotFound_WhenNoItemsExist()
+        public async Task GetAll_When_No_ItemsExist_ReturnsNotFound()
         {
-            // Arrange
-            var response = Response<IEnumerable<ToDoItem>>.Failure("To Do items not found", System.Net.HttpStatusCode.NotFound);
+            
+            var response = Response<List<ToDoItem>>.Failure("To Do items not found", System.Net.HttpStatusCode.NotFound);
 
             _Mock.Setup(m => m.Send(It.IsAny<GetAllToDosQuery>(), It.IsAny<CancellationToken>()))
                          .ReturnsAsync(response);
 
-            // Act
+           
             var result = await _controller.GetAll();
 
-            // Assert
+           
             Assert.IsType<NotFoundObjectResult>(result);
         }
         [Fact]
-        public async Task GetAll_ReturnsInternalServerError_WhenExceptionIsThrown()
+        public async Task GetAll_WhenExceptionIsThrown_ReturnsInternalServerError()
         {
            
             _Mock.Setup(m => m.Send(It.IsAny<GetAllToDosQuery>(), It.IsAny<CancellationToken>()))
@@ -89,50 +87,48 @@ namespace ToDo_API.Tests
         ///// </summary>
         ///// <returns></returns>
         [Fact]
-        public async Task GetById_ReturnsOk_WhenItemExists()
+        public async Task GetById_WhenItemExists_ReturnsOk()
         {
-            // Arrange
+           
             var todoItem = new ToDoItem { Id = Guid.NewGuid(), Title = "Task 1", Completed = false };
             var response = Response<ToDoItem>.CreateSuccess(todoItem, "To Do item retrieved successfully");
 
             _Mock.Setup(m => m.Send(It.IsAny<GetToDoByIdQuery>(), It.IsAny<CancellationToken>()))
                          .ReturnsAsync(response);
 
-            // Act
+           
             var result = await _controller.GetById(todoItem.Id);
 
-            // Assert
+           
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnValue = Assert.IsType<Response<ToDoItem>>(okResult.Value);
             Assert.Equal(todoItem.Id, returnValue.Data.Id);
             Assert.Equal("Task 1", returnValue.Data.Title);
         }
         [Fact]
-        public async Task GetById_ReturnsNotFound_WhenItemDoesNotExist()
+        public async Task GetById_WhenItemDoesNotExist_ReturnsNotFound()
         {
-            // Arrange
+            
             var response = Response<ToDoItem>.Failure("To Do item not found", System.Net.HttpStatusCode.NotFound);
 
             _Mock.Setup(m => m.Send(It.IsAny<GetToDoByIdQuery>(), It.IsAny<CancellationToken>()))
                          .ReturnsAsync(response);
 
-            // Act
+            
             var result = await _controller.GetById(Guid.NewGuid());
 
-            // Assert
+            
             Assert.IsType<NotFoundObjectResult>(result);
         }
         [Fact]
-        public async Task GetById_ReturnsInternalServerError_WhenExceptionIsThrown()
+        public async Task GetById_WhenExceptionIsThrown_ReturnsInternalServerError()
         {
-            // Arrange
             _Mock.Setup(m => m.Send(It.IsAny<GetToDoByIdQuery>(), It.IsAny<CancellationToken>()))
                          .ThrowsAsync(new Exception("Something went wrong"));
 
-            // Act
             var result = await _controller.GetById(Guid.NewGuid());
 
-            // Assert
+           
             var objectResult = Assert.IsType<ObjectResult>(result);
             Assert.Equal(500, objectResult.StatusCode);
 
@@ -148,9 +144,9 @@ namespace ToDo_API.Tests
         /// Scenario 1: Successful creation of a to-do item (201 Created).
         /// </summary>
         [Fact]
-        public async Task Create_ReturnsCreated_WhenItemIsValid()
+        public async Task Create_WhenItemIsValid_ReturnsCreated()
         {
-            // Arrange
+            
             var newToDo = new ToDoItem { Id = Guid.NewGuid(), Title = "New Task", Description="test", Completed = false };
             var command = new CreateToDoCommand(newToDo.Title, newToDo.Description, newToDo.DueDate, newToDo.Completed );
             var response = Response<ToDoItem>.CreateSuccess(newToDo, "To Do item created successfully");
@@ -158,10 +154,10 @@ namespace ToDo_API.Tests
             _Mock.Setup(m => m.Send(It.IsAny<CreateToDoCommand>(), It.IsAny<CancellationToken>()))
                          .ReturnsAsync(response);
 
-            // Act
+            
             var result = await _controller.Create(command);
 
-            // Assert
+            
             var createdAtActionResult = Assert.IsType<CreatedAtActionResult>(result);
             var returnValue = Assert.IsType<Response<ToDoItem>>(createdAtActionResult.Value);
 
@@ -174,12 +170,12 @@ namespace ToDo_API.Tests
         /// Scenario 2: Returns Bad Request (400) when the command is null.
         /// </summary>
         [Fact]
-        public async Task Create_ReturnsBadRequest_WhenCommandIsNull()
+        public async Task Create_WhenCommandIsNull_ReturnsBadRequest()
         {
-            // Act
+           
             var result = await _controller.Create(null);
 
-            // Assert
+           
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             var returnValue = Assert.IsType<Response<ToDoItem>>(badRequestResult.Value);
 
@@ -191,17 +187,17 @@ namespace ToDo_API.Tests
         /// Scenario 3: Returns Bad Request (400) when Title is missing in the command.
         /// </summary>
         [Fact]
-        public async Task Create_ReturnsBadRequest_WhenTitleIsMissing()
+        public async Task Create_WhenTitleIsMissing_ReturnsBadRequest()
         {
-            // Arrange
+            
             //var command = new CreateToDoCommand { Title = "" };
-            var newToDo = new ToDoItem { Id = Guid.NewGuid(), Title = "New Task", Description = "test", Completed = false };
+            var newToDo = new ToDoItem { Id = Guid.NewGuid(), Title = "", Description = "test", Completed = false };
             var command = new CreateToDoCommand(newToDo.Title, newToDo.Description, newToDo.DueDate, newToDo.Completed);
 
-            // Act
+           
             var result = await _controller.Create(command);
 
-            // Assert
+            
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             var returnValue = Assert.IsType<Response<ToDoItem>>(badRequestResult.Value);
 
@@ -213,7 +209,7 @@ namespace ToDo_API.Tests
         /// Scenario 4: Returns Internal Server Error (500) when an exception occurs during creation.
         /// </summary>
         [Fact]
-        public async Task Create_ReturnsInternalServerError_WhenExceptionIsThrown()
+        public async Task Create_WhenExceptionIsThrown_ReturnsInternalServerError()
         {
             var newToDo = new ToDoItem { Id = Guid.NewGuid(), Title = "New Task", Description = "test", Completed = false };
             var command = new CreateToDoCommand(newToDo.Title, newToDo.Description, newToDo.DueDate, newToDo.Completed);
@@ -221,10 +217,10 @@ namespace ToDo_API.Tests
             _Mock.Setup(m => m.Send(It.IsAny<CreateToDoCommand>(), It.IsAny<CancellationToken>()))
                          .ThrowsAsync(new Exception("Something went wrong"));
 
-            // Act
+           
             var result = await _controller.Create(command);
 
-            // Assert
+           
             var objectResult = Assert.IsType<ObjectResult>(result);
             Assert.Equal(500, objectResult.StatusCode);
 
@@ -236,7 +232,7 @@ namespace ToDo_API.Tests
         /// Additional Scenario 5: If mediator returns a null result (unexpected behavior).
         /// </summary>
         [Fact]
-        public async Task Create_ReturnsInternalServerError_WhenMediatorReturnsNull()
+        public async Task Create_WhenMediatorReturnsNull_ReturnsInternalServerError()
         {
             var newToDo = new ToDoItem { Id = Guid.NewGuid(), Title = "New Task", Description = "test", Completed = false };
             var command = new CreateToDoCommand(newToDo.Title, newToDo.Description, newToDo.DueDate, newToDo.Completed);
@@ -244,10 +240,10 @@ namespace ToDo_API.Tests
             _Mock.Setup(m => m.Send(It.IsAny<CreateToDoCommand>(), It.IsAny<CancellationToken>()))
                          .ReturnsAsync((Response<ToDoItem>)null); 
 
-            // Act
+          
             var result = await _controller.Create(command);
 
-            // Assert
+           
             var objectResult = Assert.IsType<ObjectResult>(result);
             Assert.Equal(500, objectResult.StatusCode);
 
@@ -259,20 +255,20 @@ namespace ToDo_API.Tests
         /// Scenario 1: Successful update of a to-do item (200 OK).
         /// </summary>
         [Fact]
-        public async Task Update_ReturnsOk_WhenItemIsValid()
+        public async Task Update_WhenItemIsValid_ReturnsOk()
         {
-            // Arrange
+           
             var updatedToDo = new ToDoItem { Id = Guid.NewGuid(), Title = "Updated Task", Completed = true };
-            var command = new UpdateToDoCommand { Title = "Updated Task", Description = "Updated Description", Completed = true };
+            var command = new UpdateToDoCommand(updatedToDo.Title, updatedToDo.Description, updatedToDo.DueDate, updatedToDo.Completed);
             var response = Response<ToDoItem>.CreateSuccess(updatedToDo, "To Do item updated successfully");
 
             _Mock.Setup(m => m.Send(It.IsAny<UpdateToDoCommandWrapper>(), It.IsAny<CancellationToken>()))
                          .ReturnsAsync(response);
 
-            // Act
+           
             var result = await _controller.Update(updatedToDo.Id, command);
 
-            // Assert
+           
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnValue = Assert.IsType<Response<ToDoItem>>(okResult.Value);
 
@@ -285,12 +281,12 @@ namespace ToDo_API.Tests
         /// Scenario 2: Returns Bad Request (400) when the command is null.
         /// </summary>
         [Fact]
-        public async Task Update_ReturnsBadRequest_WhenCommandIsNull()
+        public async Task Update__WhenCommandIsNull_ReturnsBadRequest()
         {
-            // Act
+            
             var result = await _controller.Update(Guid.NewGuid(), null);
 
-            // Assert
+            
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             var returnValue = Assert.IsType<Response<ToDoItem>>(badRequestResult.Value);
 
@@ -302,15 +298,14 @@ namespace ToDo_API.Tests
         /// Scenario 3: Returns Bad Request (400) when Title is missing in the command.
         /// </summary>
         [Fact]
-        public async Task Update_ReturnsBadRequest_WhenTitleIsMissing()
+        public async Task Update_WhenTitleIsMissing_ReturnsBadRequest()
         {
-            // Arrange
-            var command = new UpdateToDoCommand { Title = "", Description = "Updated Description", Completed = true };
-
-            // Act
+            var updatedToDo = new ToDoItem { Id = Guid.NewGuid(), Title = "", Completed = true };
+            var command = new UpdateToDoCommand(updatedToDo.Title, updatedToDo.Description, updatedToDo.DueDate, updatedToDo.Completed);
+           
+           
             var result = await _controller.Update(Guid.NewGuid(), command);
 
-            // Assert
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             var returnValue = Assert.IsType<Response<ToDoItem>>(badRequestResult.Value);
 
@@ -322,18 +317,19 @@ namespace ToDo_API.Tests
         /// Scenario 4: Returns Internal Server Error (500) when an exception occurs during update.
         /// </summary>
         [Fact]
-        public async Task Update_ReturnsInternalServerError_WhenExceptionIsThrown()
+        public async Task Update_WhenExceptionIsThrown_ReturnsInternalServerError()
         {
-            // Arrange
-            var command = new UpdateToDoCommand { Title = "Updated Task", Description = "Updated Description", Completed = true };
+            var updatedToDo = new ToDoItem { Id = Guid.NewGuid(), Title = "Updated Task", Description = "Updated Description", Completed = true };
+            var command = new UpdateToDoCommand(updatedToDo.Title, updatedToDo.Description, updatedToDo.DueDate, updatedToDo.Completed);
 
+         
             _Mock.Setup(m => m.Send(It.IsAny<UpdateToDoCommandWrapper>(), It.IsAny<CancellationToken>()))
                          .ThrowsAsync(new Exception("Something went wrong"));
 
-            // Act
+           
             var result = await _controller.Update(Guid.NewGuid(), command);
 
-            // Assert
+            
             var objectResult = Assert.IsType<ObjectResult>(result);
             Assert.Equal(500, objectResult.StatusCode);
 
@@ -347,16 +343,19 @@ namespace ToDo_API.Tests
         [Fact]
         public async Task Update_ReturnsInternalServerError_WhenMediatorReturnsNull()
         {
-            // Arrange
-            var command = new UpdateToDoCommand { Title = "Updated Task", Description = "Updated Description", Completed = true };
+           
+            var updatedToDo = new ToDoItem { Id = Guid.NewGuid(), Title = "Updated Task", Description = "Updated Description", Completed = true };
+            var command = new UpdateToDoCommand(updatedToDo.Title, updatedToDo.Description, updatedToDo.DueDate, updatedToDo.Completed);
+
+
 
             _Mock.Setup(m => m.Send(It.IsAny<UpdateToDoCommandWrapper>(), It.IsAny<CancellationToken>()))
                          .ReturnsAsync((Response<ToDoItem>)null); // Simulating unexpected null response.
 
-            // Act
+           
             var result = await _controller.Update(Guid.NewGuid(), command);
 
-            // Assert
+           
             var objectResult = Assert.IsType<ObjectResult>(result);
             Assert.Equal(500, objectResult.StatusCode);
 
@@ -369,16 +368,16 @@ namespace ToDo_API.Tests
         [Fact]
         public async Task Delete_ReturnsOk_WhenItemIsDeleted()
         {
-            // Arrange
+           
             var response = Response<bool>.CreateSuccess(true, "To Do item deleted successfully");
 
             _Mock.Setup(m => m.Send(It.IsAny<DeleteToDoCommand>(), It.IsAny<CancellationToken>()))
                          .ReturnsAsync(response);
 
-            // Act
+           
             var result = await _controller.Delete(Guid.NewGuid());
 
-            // Assert
+           
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnValue = Assert.IsType<Response<bool>>(okResult.Value);
 
@@ -392,16 +391,16 @@ namespace ToDo_API.Tests
         [Fact]
         public async Task Delete_ReturnsNotFound_WhenItemDoesNotExist()
         {
-            // Arrange
+           
             var response = Response<bool>.Failure("To Do item not found", System.Net.HttpStatusCode.NotFound);
 
             _Mock.Setup(m => m.Send(It.IsAny<DeleteToDoCommand>(), It.IsAny<CancellationToken>()))
                          .ReturnsAsync(response);
 
-            // Act
+           
             var result = await _controller.Delete(Guid.NewGuid());
 
-            // Assert
+           
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             var returnValue = Assert.IsType<Response<bool>>(notFoundResult.Value);
 
@@ -416,14 +415,14 @@ namespace ToDo_API.Tests
         [Fact]
         public async Task Delete_ReturnsInternalServerError_WhenExceptionIsThrown()
         {
-            // Arrange
+           
             _Mock.Setup(m => m.Send(It.IsAny<DeleteToDoCommand>(), It.IsAny<CancellationToken>()))
                          .ThrowsAsync(new Exception("Something went wrong"));
 
-            // Act
+           
             var result = await _controller.Delete(Guid.NewGuid());
 
-            // Assert
+           
             var objectResult = Assert.IsType<ObjectResult>(result);
             Assert.Equal(500, objectResult.StatusCode);
 
@@ -437,14 +436,14 @@ namespace ToDo_API.Tests
         [Fact]
         public async Task Delete_ReturnsInternalServerError_WhenMediatorReturnsNull()
         {
-            // Arrange
+           
             _Mock.Setup(m => m.Send(It.IsAny<DeleteToDoCommand>(), It.IsAny<CancellationToken>()))
                          .ReturnsAsync((Response<bool>)null); // Simulate unexpected null response.
 
-            // Act
+           
             var result = await _controller.Delete(Guid.NewGuid());
 
-            // Assert
+           
             var objectResult = Assert.IsType<ObjectResult>(result);
             Assert.Equal(500, objectResult.StatusCode);
 
@@ -457,16 +456,16 @@ namespace ToDo_API.Tests
         [Fact]
         public async Task MarkAsComplete_ReturnsOk_WhenItemIsMarkedAsComplete()
         {
-            // Arrange
+           
             var response = Response<bool>.CreateSuccess(true, "To Do item marked as complete");
 
             _Mock.Setup(m => m.Send(It.IsAny<CompleteToDoCommand>(), It.IsAny<CancellationToken>()))
                          .ReturnsAsync(response);
 
-            // Act
+           
             var result = await _controller.MarkAsComplete(Guid.NewGuid());
 
-            // Assert
+           
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnValue = Assert.IsType<Response<bool>>(okResult.Value);
 
@@ -481,16 +480,16 @@ namespace ToDo_API.Tests
         [Fact]
         public async Task MarkAsComplete_ReturnsNotFound_WhenItemDoesNotExist()
         {
-            // Arrange
+           
             var response = Response<bool>.Failure("To Do item not found", System.Net.HttpStatusCode.NotFound);
 
             _Mock.Setup(m => m.Send(It.IsAny<CompleteToDoCommand>(), It.IsAny<CancellationToken>()))
                          .ReturnsAsync(response);
 
-            // Act
+           
             var result = await _controller.MarkAsComplete(Guid.NewGuid());
 
-            // Assert
+           
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             var returnValue = Assert.IsType<Response<bool>>(notFoundResult.Value);
 
@@ -505,49 +504,52 @@ namespace ToDo_API.Tests
         [Fact]
         public async Task MarkAsComplete_ReturnsInternalServerError_WhenExceptionIsThrown()
         {
-            // Arrange
+           
             _Mock.Setup(m => m.Send(It.IsAny<CompleteToDoCommand>(), It.IsAny<CancellationToken>()))
                          .ThrowsAsync(new Exception("Something went wrong"));
 
-            // Act
+           
             var result = await _controller.MarkAsComplete(Guid.NewGuid());
 
-            // Assert
+           
             var objectResult = Assert.IsType<ObjectResult>(result);
             Assert.Equal(500, objectResult.StatusCode);
 
             var returnValue = Assert.IsType<Response<string>>(objectResult.Value);
             Assert.Equal("An error occurred while marking the To Do item as complete", returnValue.Message);
         }
+
         /// <summary>
         /// Scenario 1: Successfully retrieve filtered and sorted ToDo items (200 OK).
         /// </summary>
         [Fact]
         public async Task GetAll_ReturnsOk_WhenItemsAreFilteredAndSorted()
         {
-            // Arrange
+           
             var filteredToDoList = new List<ToDoItem>
-            {
-                new ToDoItem { Id = Guid.NewGuid(), Title = "Task 1", DueDate = DateTime.Now.AddDays(1), Completed = false },
-                new ToDoItem { Id = Guid.NewGuid(), Title = "Task 2", DueDate = DateTime.Now.AddDays(2), Completed = true }
-            };
+    {
+        new ToDoItem { Id = Guid.NewGuid(), Title = "Task 1", DueDate = DateTime.Now.AddDays(1), Completed = false },
+        new ToDoItem { Id = Guid.NewGuid(), Title = "Task 2", DueDate = DateTime.Now.AddDays(2), Completed = true }
+    };
 
+            
             var response = Response<List<ToDoItem>>.CreateSuccess(filteredToDoList, "Filtered ToDo items retrieved successfully");
 
             _Mock.Setup(m => m.Send(It.IsAny<GetFilteredToDosQuery>(), It.IsAny<CancellationToken>()))
                          .ReturnsAsync(response);
 
-            // Act
+           
             var result = await _controller.GetAll(completed: true, sortBy: "dueDate", sortOrder: "asc");
 
-            // Assert
+           
             var okResult = Assert.IsType<OkObjectResult>(result);
             var returnValue = Assert.IsType<Response<List<ToDoItem>>>(okResult.Value);
 
             Assert.Equal(200, okResult.StatusCode);
-            Assert.Equal(2, returnValue.Data.Count);
+            Assert.Equal(2, returnValue.Data.Count());
             Assert.Equal("Filtered ToDo items retrieved successfully", returnValue.Message);
         }
+
 
         /// <summary>
         /// Scenario 2: Returns NotFound (404) when no items match the filter criteria.
@@ -555,16 +557,16 @@ namespace ToDo_API.Tests
         [Fact]
         public async Task GetAll_ReturnsNotFound_WhenNoItemsAreFound()
         {
-            // Arrange
+           
             var response = Response<List<ToDoItem>>.Failure("No ToDo items found", System.Net.HttpStatusCode.NotFound);
 
             _Mock.Setup(m => m.Send(It.IsAny<GetFilteredToDosQuery>(), It.IsAny<CancellationToken>()))
                          .ReturnsAsync(response);
 
-            // Act
+           
             var result = await _controller.GetAll(completed: false, sortBy: "dueDate", sortOrder: "asc");
 
-            // Assert
+           
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             var returnValue = Assert.IsType<Response<List<ToDoItem>>>(notFoundResult.Value);
 
@@ -572,20 +574,21 @@ namespace ToDo_API.Tests
             Assert.Equal("No ToDo items found", returnValue.Message);
         }
 
+
         /// <summary>
         /// Scenario 3: Returns Bad Request (400) when an exception occurs during filtering and sorting.
         /// </summary>
         [Fact]
         public async Task GetAll_ReturnsBadRequest_WhenExceptionIsThrown()
         {
-            // Arrange
+           
             _Mock.Setup(m => m.Send(It.IsAny<GetFilteredToDosQuery>(), It.IsAny<CancellationToken>()))
                          .ThrowsAsync(new Exception("Something went wrong"));
 
-            // Act
+           
             var result = await _controller.GetAll(completed: true, sortBy: "dueDate", sortOrder: "asc");
 
-            // Assert
+           
             var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
             var returnValue = Assert.IsType<Response<List<ToDoItem>>>(badRequestResult.Value);
 

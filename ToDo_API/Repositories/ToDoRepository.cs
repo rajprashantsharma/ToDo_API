@@ -6,7 +6,7 @@ namespace ToDo_API.Repositories
     {
         private readonly List<ToDoItem> _toDoItems = new List<ToDoItem>();
 
-        public async Task<IEnumerable<ToDoItem>> GetAllAsync()
+        public async Task<List<ToDoItem>> GetAllAsync()
         {
             return await Task.FromResult(_toDoItems);
         }

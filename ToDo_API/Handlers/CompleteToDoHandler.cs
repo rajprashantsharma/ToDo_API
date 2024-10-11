@@ -28,7 +28,7 @@ namespace ToDo_API.Handlers
             // Mark the item as completed
             existingItem.Completed = true;
 
-            // Persist the changes in the repository
+            // Update the changes in the repository
             await _repository.UpdateAsync(existingItem);
 
             return Response<bool>.CreateSuccess(true, "ToDo item marked as complete");

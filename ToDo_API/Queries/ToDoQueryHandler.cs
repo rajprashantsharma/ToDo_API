@@ -12,7 +12,7 @@ namespace ToDo_API.Queries
             _repository = repository;
         }
 
-        public async Task<IEnumerable<ToDoItem>> GetAllAsync()
+        public async Task<List<ToDoItem>> GetAllAsync()
         {
             return await _repository.GetAllAsync();
         }

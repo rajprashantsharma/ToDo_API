@@ -11,7 +11,7 @@ namespace ToDo_API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]  // Protect all endpoints by default
+    [Authorize]  // All endpoints are protected by default 
     public class ToDoController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -22,7 +22,7 @@ namespace ToDo_API.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous] // Publicly accessible endpoint
+        [AllowAnonymous] // Anyone can access endpoint 
         [ProducesResponseType(typeof(Response<List<ToDoItem>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<List<ToDoItem>>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAll()
@@ -39,7 +39,7 @@ namespace ToDo_API.Controllers
             }
             catch (Exception ex)
             {
-                // Handle unexpected errors and return 500 Internal Server Error
+                // Handle Exception errors and return 500 Internal Server Error
                 return StatusCode(500, Response<string>.Failure("An error occurred while retrieving the To Do items", System.Net.HttpStatusCode.InternalServerError));
             }
         }
@@ -134,23 +134,31 @@ namespace ToDo_API.Controllers
             }
         }
 
-        // Additional Features: Marking To-Do as Complete
+        // Additional Features: Marking To-Do Task as Complete
         [HttpPatch("{id}/complete")]
         [ProducesResponseType(typeof(Response<bool>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<bool>), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(Response<string>), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> MarkAsComplete(Guid id)
         {
-            var result = await _mediator.Send(new CompleteToDoCommand(id));
-
-            if (result.Data)
+            try
             {
-                return Ok(Response<bool>.CreateSuccess(true, "To Do item marked as complete"));
-            }
+                var result = await _mediator.Send(new CompleteToDoCommand(id));
 
-            return NotFound(Response<bool>.Failure("To Do item not found", System.Net.HttpStatusCode.NotFound));
+                if (result.Data)
+                {
+                    return Ok(Response<bool>.CreateSuccess(true, "To Do item marked as complete"));
+                }
+
+                return NotFound(Response<bool>.Failure("To Do item not found", System.Net.HttpStatusCode.NotFound));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, Response<string>.Failure("An error occurred while marking the To Do item as complete"));
+            }
         }
 
-        // Additional Features: Filtering and Sorting for To-Do Items
+        // Additional Features: Filtering and Sorting for To-Do Task Items
         [HttpGet("filtered")]
         [ProducesResponseType(typeof(Response<List<ToDoItem>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Response<List<ToDoItem>>), StatusCodes.Status400BadRequest)]

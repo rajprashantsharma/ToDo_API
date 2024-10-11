@@ -4,7 +4,7 @@ namespace ToDo_API.Queries
 {
     public interface IToDoQueryHandler
     {
-        Task<IEnumerable<ToDoItem>> GetAllAsync();
+        Task<List<ToDoItem>> GetAllAsync();
         Task<ToDoItem> GetByIdAsync(Guid id);
     }
 }

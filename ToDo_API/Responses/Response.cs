@@ -10,7 +10,7 @@ namespace ToDo_API.Responses
         public T Data { get; set; } // Holds the data in case of success
         public List<string> Errors { get; set; } // Holds validation errors or error details
 
-        // Success factory method
+        
         public static Response<T> CreateSuccess(T data, string message = "Operation was successful", HttpStatusCode statusCode = HttpStatusCode.OK)
         {
             return new Response<T>
@@ -23,7 +23,7 @@ namespace ToDo_API.Responses
             };
         }
 
-        // Failure factory method
+   
         public static Response<T> Failure(string message, HttpStatusCode statusCode = HttpStatusCode.BadRequest, List<string> errors = null)
         {
             return new Response<T>
@@ -36,7 +36,7 @@ namespace ToDo_API.Responses
             };
         }
 
-        // Validation failure factory method
+      
         public static Response<T> ValidationFailure(List<string> errors)
         {
             return new Response<T>
