@@ -53,6 +53,14 @@ The API uses **Basic Authentication** to secure its endpoints. You need to provi
 | PATCH  | /todos/{id}/complete        | Mark a to-do item as complete        | Yes           |
 | GET    | /todos/filtered             | Get filtered and sorted to-do items  | Yes           |
 
+
+
+# Design Patterns Used
+1. **Mediator Pattern**:The Mediator Pattern is used to centralize the communication between different parts of the application, especially in handling the request/response logic. In this project, MediatR is used as an implementation of the Mediator pattern.
+2. **Repository Pattern**: The Repository Pattern abstracts the data access layer, ensuring that the controllers and services do not need to know the details of how the data is stored or retrieved.
+3. **Command Query Responsibility Segregation (CQRS)**:The CQRS Pattern is applied where the application's read and write operations are segregated.
+
+
 # Data Storage
 The to-do items are stored in-memory for simplicity. This means that the data is lost when the application is restarted. The storage mechanism can be easily extended to persist data to a file or a database in the future.
 
